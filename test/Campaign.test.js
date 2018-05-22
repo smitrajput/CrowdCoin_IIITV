@@ -61,4 +61,30 @@ describe('Campaigns', () => {
                                     //which consumed some gas(in wei) from it, and ganache DOESN'T refresh
                                     //the test accounts balance to 100 ether after every npm run test
   });
+  
+  it('requires a minimum contribution', async () =>{
+		try{
+			   await campaign.methods.contribute().send({
+				value: '5',
+				from: accounts[1]
+			});
+			assert(false);
+		  }catch(err){
+			assert(err);
+	    	}		
+	});
+	
+	it('allows a manager to make a payment request', async ()=> {
+		await campaign.methods
+			.createRequest( 'buy batteries','100',accounts[1])
+			.send({
+				from: accounts[0],
+				gas: '1000000'
+			    });
+		const request = await campaign.methods.requests(0).call();
+		
+		assert.equal('buy batteries', request.description);
+	});
+  
+  
 });
