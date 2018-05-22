@@ -29,3 +29,36 @@ beforeEach (async () => {
 		campaignAddress
 	);
 });
+
+describe('Campaigns', () => {
+
+	it('processes requests', async () => {
+    await campaign.methods.contribute().send({
+      from: accounts[0],
+      value: web3.utils.toWei('10', 'ether')
+    });
+
+    await campaign.methods
+      .createRequest('A', web3.utils.toWei('5', 'ether'), accounts[1])
+      .send({ from: accounts[0], gas: '1000000'});
+
+    await campaign.methods.approveRequest(0).send({
+      from: accounts[0],
+      gas: '1000000'
+    });
+
+    await campaign.methods.finalizeRequest(0).send({
+      from: accounts[0],
+      gas: '1000000'
+    });
+
+    let balance = await web3.eth.getBalance(accounts[1]);    //balance in string wei
+    balance = await web3.utils.fromWei(balance, 'ether');      //balance in string ether
+    balance = parseFloat(balance);                           //balance in float ether
+
+    //console.log(balance);
+    assert(balance > 104);          //during tests accounts[1] was used to make some transactions,
+                                    //which consumed some gas(in wei) from it, and ganache DOESN'T refresh
+                                    //the test accounts balance to 100 ether after every npm run test
+  });
+});
