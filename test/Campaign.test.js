@@ -32,7 +32,7 @@ beforeEach (async () => {
 
 describe('Campaigns', () => {
 
-	it('processes requests', async () => {
+  it('processes requests', async () => {
     await campaign.methods.contribute().send({
       from: accounts[0],
       value: web3.utils.toWei('10', 'ether')
