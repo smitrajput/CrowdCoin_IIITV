@@ -32,7 +32,8 @@ class ContributeForm extends Component {
         this.setState({ errorMessage: err.message });
     }
 
-    this.setState({ loading: false, value: ''});  //value: '', will nullify the value in th form field after
+    this.setState({ loading: false, value: ''});  
+    //value: '', will nullify the value in th form field after
                                                   //successful contribution
   };
 
